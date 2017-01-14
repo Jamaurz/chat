@@ -1,0 +1,40 @@
+/** basic */
+body {
+  color: #090809;
+  background-color: #fff;
+}
+.active {
+  border-top: 2px dashed #E06450;
+  border-left: 2px dashed #E06450;
+  border-right: 2px dashed #E06450;
+  border-radius: 25px;
+  color: #E06450;
+}
+.btn-chat {
+  background-color: #D8CBBE;
+  color: #fff;
+}
+.btn-chat:hover {
+  background-color: #c5b29e;
+  color: #E06450;
+}
+/** nav */
+#mainNav a {
+  color: #090809;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 1% 3%;
+}
+#mainNav a:hover {
+  border-top: 2px dashed #E06450;
+  border-left: 2px dashed #E06450;
+  border-right: 2px dashed #E06450;
+  border-radius: 25px;
+  color: #E06450;
+}
+/** modal */
+#myModal {
+  width: 60%;
+  margin: auto;
+}

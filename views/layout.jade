@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title= title
+    link(rel='stylesheet', href='/stylesheets/lib/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/css/style.css')
+  body
+        block content
+
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+  script(src='javascripts/lib/bootstrap/bootstrap.min.js')
+  script(src='javascripts/lib/angular/angular.min.js')
+  script(src='javascripts/lib/angular/angular-route.min.js')
+  script(src='/socket.io/socket.io.js')
+  script(src='javascripts/lib/socket.js')
+  script(src='javascripts/app.js')
+  script(src='javascripts/controllers/mainController.js')
+  script(src='javascripts/controllers/registrationController.js')
+  script(src='javascripts/controllers/userController.js')
+  script(src='javascripts/services/services.js')
+    
+    

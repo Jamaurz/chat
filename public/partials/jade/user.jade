@@ -1,0 +1,26 @@
+.col-sm-4
+	p.disUser ID: {{my.current.id}}
+	p.disUser Name: {{my.current.firstName}}  {{my.current.lastName}}
+	p.disUser About: {{my.current.about}}
+
+.col-sm-4(ng-show='my.updateAble')
+	form.formUpdate(name='updateinfoform' novalide)
+	.row
+		label.col-sm-4 First Name:
+		.col-sm-8
+			input.form-control(type="text" name='firstName' ng-model="my.current.firstName" required='required')
+			span.errorForm(ng-show='updateinfoform.firstName.$touched && updateinfoform.firstName.$invalid') Not valid
+	.row
+		label.col-sm-4 Last Name:
+		.col-sm-8 
+			input.form-control(type="text" name='lastName' ng-model="my.current.lastName" required='required')
+			span.errorForm(ng-show='updateinfoform.lastName.$touched && updateinfoform.lastName.$invalid') Not valid
+	.row
+		label.col-sm-4 About: 
+		.col-sm-8
+			input.form-control(type="text" name='about' ng-model="my.current.about" required='required')
+			span.errorForm(ng-show='updateinfoform.about.$touched && updateinfoform.about.$invalid') Not valid
+	
+	.col-sm-12
+		input.form-control.btn(type="submit" ng-click="my.updateInfoForm()" value="Update" ng-disabled="updateinfoform.$invalid")
+

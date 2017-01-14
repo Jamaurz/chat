@@ -1,0 +1,29 @@
+.col-sm-8.col-sm-offset-2
+	form(name='registrform' novalid='novalid')
+		p.message(ng-show='my.message') {{my.message}}
+		div.form-group
+			label.control-label.col-sm-2(for='registrationName') First Name:
+			div.col-sm-10
+				input.form-control(type="text" placeholder="First Name" name='firstName' ng-model='my.registObj.firstName' id="registrationFirstName" required='required')
+				span.errorForm(ng-show='registrform.firstName.$touched && registrform.firstName.$invalid') Not valid
+		div.form-group
+			label.control-label.col-sm-2(for='registrationLastName') Last Name:
+			div.col-sm-10
+				input.form-control(type="text" placeholder="Last Name" name='lastName' ng-model='my.registObj.lastName' id="registrationLastName" required='required')
+				span.errorForm(ng-show='registrform.lastName.$touched && registrform.lastName.$invalid') Not valid
+		div.form-group
+			label.control-label.col-sm-2(for='registrationEmail') E-mail:
+			div.col-sm-10
+				input.form-control(type="email" placeholder="Email" name='email' ng-model='my.registObj.email' id="registrationEmail" required='required')
+				span.errorForm(ng-show='registrform.email.$touched && registrform.email.$invalid') Not valid
+		div.form-group
+			label.control-label.col-sm-2(for='registrationPassword') Password:
+			div.col-sm-10
+				input.form-control(type="password" placeholder="Password" name='password' ng-model='my.registObj.password' id="registrationPassword" required='required')
+				span.errorForm(ng-show='registrform.password.$touched && registrform.password.$invalid') Not valid
+		div.form-group
+			label.control-label.col-sm-2(for='registrationAbout') About me:
+			div.col-sm-10
+				textarea.form-control(id='registrationAbout' ng-model='my.registObj.about')
+		.inputCF
+			input.form-control(type="submit" ng-click="	my.registration()" value="Registraion" ng-disabled="registrform.$invalid")

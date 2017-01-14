@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    .container(ng-app='ChatApp')      
+        div(ng-controller='MainController as my')
+            ul#mainNav
+                a(href='/' ng-class='my.mainActive' ng-click='my.mainActiveFn()') Main
+                a(href='#!/registration' ng-class='my.regActive' ng-click='my.regActiveFn()') Registration
+                // Trigger the modal with a button
+                    input.btn.btn-chat.btn-lg(type='button', data-toggle='modal', data-target='#myModal' value='Login') 
+
+            div(ng-view)
+            // Modal
+            #myModal.modal.fade(role='dialog')
+                .modal-dialog
+                // Modal content
+                .modal-content
+                    .modal-header
+                        button.close(type='button', data-dismiss='modal') &times;
+                        |         
+                        h4.modal-title Login    
+                    .modal-body  
+                        form(method='post' name='loginform' novalide='novalide')
+                            input.form-control(type="email" name='email' ng-model='my.loginObj.email' placeholder='Email' required='required')
+                            span.errorForm(ng-show='loginform.email.$touched && loginform.email.$invalid') Not valid
+                            input.form-control(type='password' name='pass' ng-model='my.loginObj.pass' placeholder='Password' required='required')
+                            span.errorForm(ng-show='loginform.pass.$touched && loginform.pass.$invalid') Not valid
+                            input.form-control(type="submit" ng-click="my.login()" value="Login" ng-disabled="loginform.$invalid")      
+                    .modal-footer
+                        p.message(ng-show='my.message') {{my.message}}

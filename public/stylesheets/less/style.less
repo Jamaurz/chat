@@ -1,0 +1,47 @@
+@textColor: #D8CBBE;
+@warmColor: #E06450;
+@darkColor: #090809;
+@darkColor2: #1C1E15;
+@textColor: #D8CBBE;
+@mainColor: #fff;
+
+/** basic */
+body {
+	color: @darkColor;
+	background-color: @mainColor;
+}
+.active {
+	border-top: 2px dashed @warmColor;
+	border-left: 2px dashed @warmColor;
+	border-right: 2px dashed @warmColor;
+	border-radius: 25px;
+	color: @warmColor;
+}
+.btn-chat {
+	background-color: @textColor;
+	color: @mainColor;
+	&:hover {
+		background-color: darken(@textColor, 10%);
+		color: @warmColor;
+	}
+}
+
+/** nav */
+#mainNav {
+	a {
+		color: @darkColor;
+		text-decoration: none;
+		text-transform: uppercase;
+		display: inline-block;
+		padding: 1% 3%;
+		&:hover {			
+			.active			
+		}
+	}
+}
+
+/** modal */
+#myModal {
+	width: 60%;
+	margin: auto;
+}
