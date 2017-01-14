@@ -22,10 +22,6 @@ connection.connect();
 var usernames = {};
 var userID = {};
 var rooms = ['room1', 'room2', 'room3'];
-var roomsPrivate = [
-  {users: ['sina@ukr.net', 'ja@ukr.net'], 'nameChat': 'chat1'},
-  {users: ['sina@ukr.net', 'super@ukr.net'], 'nameChat': 'chat2'}
-  ];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -69,6 +65,7 @@ app.post('/info', function(req, res) {
     })
 
 });
+
 app.post('/updateInfo', function(req, res) {
     console.log(req.body);
     var user = req.body;
@@ -85,26 +82,27 @@ io.sockets.on('connection', function(socket) {
   //socket is the user, we can communicate with it from here.
     socket.on('addUser', function(username){
       //When the client emits an add user, we perform that functionality
-      socket.username = username;
-      console.log(username + " Connected");
+        socket.username = username;
+        console.log(username + " Connected");  
+        getRooms(function(data){
+            //tell the user to join the default room
+            socket.room = data[0];
+            //save the user
+            usernames[username] = username;
+            userID[username] = socket.id;
+            //physically join the player and it's socket to the room
+            socket.join(socket.room);
+          
+            //emit, to the client, you've connected
+            updateClient(socket, username, socket.room);
 
-      //tell the user to join the default room
-      socket.room = rooms[0];
-      //save the user
-      usernames[username] = username;
-      userID[username] = socket.id;
-      //physically join the player and it's socket to the room
-      socket.join(socket.room);
-      
-      //emit, to the client, you've connected
-      updateClient(socket, username, socket.room);
-
-      //emit to the room, a person has connected
-      //socket.broadcast.to(socket.room).emit('updateChat', 'SERVER', username + ' has connected');
-      //updateChatRoom(socket, 'connected');
-      updateRoomList(socket, socket.room);
-      //update users list
-      io.sockets.emit('updateUsers', usernames);
+            //emit to the room, a person has connected
+            //socket.broadcast.to(socket.room).emit('updateChat', 'SERVER', username + ' has connected');
+            //updateChatRoom(socket, 'connected');
+            updateRoomList(socket, socket.room);
+            //update users list
+            io.sockets.emit('updateUsers', usernames);
+        });      
     });
     //take in the message, emit it
     socket.on('sendChat', function (data) {
@@ -127,26 +125,26 @@ io.sockets.on('connection', function(socket) {
         updateRoomList(socket, socket.room);
     });
     socket.on('addRoom', function(newRoom) {
-        socket.leave(socket.room);
-        socket.join(newRoom);
         //update client
         updateClient(socket, socket.username, newRoom);
-        //change room
-        socket.room = newRoom;
-        rooms[rooms.length] = newRoom;
-        updateRoomList(socket, socket.room);
-        socket.broadcast.emit('updateRoomsBroadcast', newRoom);
+        //add room
+        connection.query('insert into rooms (nameChat) values (?)', [newRoom], function(err, result) {
+            if(err) throw err;
+            updateRoomList(socket, newRoom);
+            socket.broadcast.emit('updateRoomsBroadcast', newRoom);
+        })
     });
+    //add private chat
     socket.on('addChat', function(friend) {
       var nameChat = uuid.v4();
-      var obj = {};
-      obj.users = [socket.username, friend];
-      obj.nameChat = nameChat;
-      roomsPrivate.push(obj);
-      console.log('rooms private', roomsPrivate);
-      updateRoomList(socket, socket.room);
-      updateRoomListFriend(friend, nameChat, socket.username);
-    })
+      connection.query('insert into chat (user1, user2, nameChat) values (?,?,?)', [socket.username, friend, nameChat], function(err, result) {
+        if(err) throw err;
+        console.log(result);
+        updateRoomList(socket, socket.room);
+        updateRoomListFriend(friend, nameChat, socket.username);
+      });    
+    });
+
     //disconnecting from a room
     socket.on('disconnect', function() {
         // remove the user from global list
@@ -168,17 +166,13 @@ function updateClient(socket, username, newRoom) {
 }
 
 function updateRoomList(socket, currentRoom) {
-  var chat = []
-  for(var i = 0; i < roomsPrivate.length; i++) {
-    if(roomsPrivate[i].users[0] == socket.username) {
-      chat.push(roomsPrivate[i]);
-    } else if(roomsPrivate[i].users[1] == socket.username){
-      chat.push(roomsPrivate[i]);
+    getRooms(function(rooms) {
+        connection.query('select user1, user2, nameChat from chat where user1 = ? OR user2 = ?', [socket.username, socket.username], function(err, rows) {
+            if(err) throw err;
+                socket.emit('updateRooms', rooms, currentRoom, rows, socket.username);
+            });
+        });
     }
-  }
-  console.log(chat);
-  socket.emit('updateRooms', rooms, currentRoom, chat, socket.username);
-}
 function updateRoomListFriend(friend, nameRoom, aliasRoom) {
   io.sockets.in(userID[friend]).emit('updateRoomsFriend', nameRoom, aliasRoom);
 }
@@ -190,4 +184,11 @@ function updateChatRoom(socket, message) {
 //We will use this function to update everyone!
 function updateGlobal(socket, message) {
     socket.broadcast.emit('updateChat', 'SERVER', socket.username + ' has ' + message);
+}
+
+function getRooms(callback) {
+    connection.query('select nameChat from rooms', function(err, rows, fields) {
+        if(err) throw err;
+        callback(rows);
+    });
 }

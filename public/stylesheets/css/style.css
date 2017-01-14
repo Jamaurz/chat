@@ -18,6 +18,9 @@ body {
   background-color: #c5b29e;
   color: #E06450;
 }
+.deleteActive {
+  display: none;
+}
 /** nav */
 #mainNav a {
   color: #090809;

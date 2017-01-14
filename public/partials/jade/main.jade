@@ -5,7 +5,7 @@
             | &#x9;
             #rooms
                 ul
-                    li(ng-repeat='room in my.rooms' ng-click='my.switchRoom(room)') {{room}}
+                    li(ng-repeat='room in my.rooms' ng-click='my.switchRoom(room.nameChat)') {{room.nameChat}}
                     |     
                 input#nameRoom(class='form-control' ng-model='my.nameRoom')
                 |     
@@ -17,9 +17,7 @@
             #users
                 b USERS
                 ul 
-                    li(ng-repeat='user in my.users' ng-click='my.addChat(user)'){{user}}
-                
-
+                    li(ng-repeat='user in my.users' ng-click='my.addChat(user)'){{user}} 
             ul
                 li(ng-repeat='msg in my.serverMessage'){{msg.data.username}} : {{msg.data.msg}}
             | 
@@ -28,6 +26,7 @@
             .conversationContainer
                 #message
                     h2 {{my.currentRoom}}
+                        span(ng-click='my.deleteChat()' ng-show='my.currentRoomReal' ng-class='my.deleteActive') delete
                     ul
                         li(ng-repeat='msg in my.chatMessage') {{msg.username}}: {{msg.msg}}
                 | &#x9;
