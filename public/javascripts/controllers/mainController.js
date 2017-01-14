@@ -2,7 +2,6 @@ app.controller('MainController', ["socket", "$location", "userServices",   funct
     vm = this;
     vm.serverMessage = [];
     vm.currentRoom = 'room1';
-    vm.chatMessage = [];
     vm.roomsPrivate = [];
 
     vm.login = function() {
@@ -19,16 +18,18 @@ app.controller('MainController', ["socket", "$location", "userServices",   funct
 
     vm.datasend = function() {
         if(vm.data) {
-            socket.emit('sendChat', vm.data);
+            var current;
+            if(vm.currentRoomReal) {
+                current = vm.currentRoomReal
+            } else {
+                current = vm.currentRoom;
+            }
+            socket.emit('sendChat', current , vm.data);
             vm.data = '';
         }
     }
-
-    socket.on('updateChatMessage', function(username, data) {
-        var msg = {};
-        msg.username = username;
-        msg.msg = data;
-        vm.chatMessage.push(msg);
+    socket.on('updateChatMessage', function(message) {
+        vm.chatMessage = message;
     });
 
     socket.on('connect', function() {

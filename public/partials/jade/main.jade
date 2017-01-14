@@ -28,7 +28,7 @@
                     h2 {{my.currentRoom}}
                         span(ng-click='my.deleteChat()' ng-show='my.currentRoomReal' ng-class='my.deleteActive') delete
                     ul
-                        li(ng-repeat='msg in my.chatMessage') {{msg.username}}: {{msg.msg}}
+                        li(ng-repeat='msg in my.chatMessage') {{msg.author}}: {{msg.message}}
                 | &#x9;
                 textarea#data(class='form-control' ng-model='my.data')
                 | &#x9;

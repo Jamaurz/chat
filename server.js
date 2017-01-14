@@ -102,13 +102,22 @@ io.sockets.on('connection', function(socket) {
             updateRoomList(socket, socket.room);
             //update users list
             io.sockets.emit('updateUsers', usernames);
+            connection.query('select * from listmessage where nameChat = ?', [socket.room.nameChat], function(err, rows, fields) {
+                console.log('addUser', rows);
+                io.sockets.in(socket.room).emit('updateChatMessage', rows);
+            }); 
         });      
     });
     //take in the message, emit it
-    socket.on('sendChat', function (data) {
+    socket.on('sendChat', function (nameChat, data) {
         //send the message to everyone
         console.log(socket.username + " sent a message");
-        io.sockets.in(socket.room).emit('updateChatMessage', socket.username, data);
+        connection.query('insert into listMessage (nameChat, author, message) values (?, ?, ?)', [nameChat, socket.username, data], function(err, result) {
+            connection.query('select * from listmessage where nameChat = ?', [nameChat], function(err, rows, fields) {
+                    io.sockets.in(socket.room).emit('updateChatMessage', rows);
+            });        
+        });
+        
     });
     //when we switch a room
     socket.on('switchRoom', function(newRoom) {
@@ -123,6 +132,9 @@ io.sockets.on('connection', function(socket) {
         //update new room
         //updateChatRoom(socket, 'connected');
         updateRoomList(socket, socket.room);
+        connection.query('select * from listmessage where nameChat = ?', [newRoom], function(err, rows, fields) {
+                io.sockets.in(socket.room).emit('updateChatMessage', rows);
+        }); 
     });
     socket.on('addRoom', function(newRoom) {
         //update client
@@ -139,7 +151,6 @@ io.sockets.on('connection', function(socket) {
       var nameChat = uuid.v4();
       connection.query('insert into chat (user1, user2, nameChat) values (?,?,?)', [socket.username, friend, nameChat], function(err, result) {
         if(err) throw err;
-        console.log(result);
         updateRoomList(socket, socket.room);
         updateRoomListFriend(friend, nameChat, socket.username);
       });    
