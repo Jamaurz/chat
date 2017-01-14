@@ -23,8 +23,8 @@ var usernames = {};
 var userID = {};
 var rooms = ['room1', 'room2', 'room3'];
 var roomsPrivate = [
-  {users: ['sina', 'jamaurz'], 'nameChat': 'chat1'},
-  {users: ['sina', 'sino'], 'nameChat': 'chat2'}
+  {users: ['sina@ukr.net', 'ja@ukr.net'], 'nameChat': 'chat1'},
+  {users: ['sina@ukr.net', 'super@ukr.net'], 'nameChat': 'chat2'}
   ];
 
 app.use(bodyParser.json());

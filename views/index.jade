@@ -8,7 +8,8 @@ block content
                 a(href='#!/registration' ng-class='my.regActive' ng-click='my.regActiveFn()') Registration
                 // Trigger the modal with a button
                     input.btn.btn-chat.btn-lg(type='button', data-toggle='modal', data-target='#myModal' value='Login') 
-
+                div.pull-right 
+                    h5 {{my.currentUser}}
             div(ng-view)
             // Modal
             #myModal.modal.fade(role='dialog')

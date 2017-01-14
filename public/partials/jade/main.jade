@@ -6,15 +6,18 @@
             #rooms
                 ul
                     li(ng-repeat='room in my.rooms' ng-click='my.switchRoom(room)') {{room}}
-            |     
-            input#nameRoom(class='form-control')
-            |     
-            input#addRoom(type='button', class='btn btn-chat btn-block', value='Create Room')
+                    |     
+                input#nameRoom(class='form-control' ng-model='my.nameRoom')
+                |     
+                input#addRoom(type='button', class='btn btn-chat btn-block', value='Create Room' ng-click='my.addRoom()')
+                ul
+                    b Chat
+                    li(ng-repeat='room in my.roomsPrivate' ng-click='my.switchRoom(room.nameChat, room.aliasChat)') {{room.aliasChat}}
             |     
             #users
                 b USERS
                 ul 
-                    li(ng-repeat='user in my.users' ng-hide='user == my.currentUser'){{user}}
+                    li(ng-repeat='user in my.users' ng-click='my.addChat(user)'){{user}}
                 
 
             ul
@@ -28,6 +31,6 @@
                     ul
                         li(ng-repeat='msg in my.chatMessage') {{msg.username}}: {{msg.msg}}
                 | &#x9;
-                input#data(class='form-control' ng-model='my.data')
+                textarea#data(class='form-control' ng-model='my.data')
                 | &#x9;
                 input#datasend(type='button', class='btn btn-chat btn-block', value='send' ng-click='my.datasend()')
